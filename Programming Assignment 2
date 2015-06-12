@@ -1,0 +1,54 @@
+
+## functions find inverse of a square invertible matrix
+
+
+# generates a list of functions which can be applied to matrix x
+
+makeCacheMatrix <- function(x = matrix()) {
+
+# Date function written: June 11, 2015
+# function body start:
+# makeCacheMatrix -- argument/parameter is a square invertible matrix of real numbers
+# input: a square invertible matrix
+    inv.mat<-NULL              # initialize matrix inverse to NULL
+	set<-function(y) {         # constructor function to set value of matrix
+	     x<<-y                 # "<<-" operator causes x to exist globally
+		 inv.mat<<-NULL        # set matrix inverse to NULL
+		                       # "<<-"" operator causes inv.mat to exist globally
+	}
+	
+	get<-function() x          # get matrix
+	setinv<-function(s) inv.mat<<-s     # constructor to set global value of matrix inverse
+	                                    # once that inverse has been calculated
+						# accessor function (getinv) obtains the current value of inv.mat				
+	getinv<-function() inv.mat  
+    # output: a list of functions which is the input for the cacheSolve function
+	list(set = set, get = get, 
+	     setinv = setinv, 
+		 getinv = getinv)
+# function body end.		 
+} # end function makeCacheMatrix
+
+
+
+
+
+## Write a short comment describing this function
+# Calculates the inverse if that inverse has not been previously calculated and cached
+
+cacheSolve <- function(x, ...) {
+# Date function written: June 11, 2015
+# function body start:
+# argument/parameter for function: List of functions
+    inv.mat<-x$getinv()       # get current inverse which may be NULL
+	if(!is.null(inv.mat)) {  # test if a non NULL inverse exists 
+	      message("getting cached data")
+		  return (inv.mat)    # return non NULL inverse
+	}
+	
+	data<-x$get()             # obtain copy of original matrix via accessor function
+	inv.mat<-solve(data,...)  # calculate matrix inverse using solve function
+	x$setinv(inv.mat)         # set up non NULL copy of matrix inverse
+	inv.mat                   # output: return matrix inverse
+# function body end.	
+}
